@@ -36,11 +36,12 @@ def get_command_input():
 # Головна функція програми
 def main():
     db = NotesBook()
+    
+    print("\nAvailable commands:")
+    command = get_command_input()
 
     while True:
-        print("\nAvailable commands:")
 
-        command = get_command_input()
         # Обробка команд
         if command == "hello":
             say_hello()
