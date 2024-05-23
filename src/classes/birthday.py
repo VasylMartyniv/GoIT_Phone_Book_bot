@@ -65,3 +65,30 @@ def search_by_date_birthday(args, book):
     if not results:
         return "No contacts found with this birthday."
     return "\n".join(results)  # Повертаємо список контактів з цією датою народження
+
+# Функція для зміни дня народження контакту
+@input_error
+def change_birthday(args, book):
+    if len(args) != 2:
+        raise IndexError("Please provide a name and a new birthday in the format DD.MM.YYYY.")
+    name, new_birthday = args
+    record = book.find(name)
+    if record:
+        record.change_birthday(new_birthday)
+        return f"Birthday for {name} changed to {new_birthday}."
+    else:
+        raise KeyError(f"Contact '{name}' not found.")
+
+# Функція для видалення дня народження контакту
+@input_error
+def delete_birthday(args, book):
+    if len(args) != 1:
+        raise IndexError("Please provide a name.")
+    name = args[0]
+    record = book.find(name)
+    if record:
+        record.delete_birthday()
+        return f"Birthday for {name} deleted."
+    else:
+        raise KeyError(f"Contact '{name}' not found.")
+

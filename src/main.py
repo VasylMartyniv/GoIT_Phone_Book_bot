@@ -2,6 +2,7 @@ import readline
 
 from src.classes.notes_book import NotesBook
 from src.utils.utils import *
+from src.classes.birthday import add_birthday, show_birthday, show_all_birthdays, search_by_date_birthday
 
 
 # Функція для автодоповнення команд
@@ -65,17 +66,30 @@ def main():
             delete_contact()
 
         elif command == "add_birthday":
-            add_birthday()
+            name = input("Enter name: ")
+            birthday = input("Enter birthday (DD.MM.YYYY): ")
+            print(add_birthday([name, birthday], book))
 
         elif command == "show_birthday":
-            show_birthday()
+            name = input("Enter name: ")
+            print(show_birthday([name], book))
 
         elif command == "show_all_birthdays":
-            show_all_birthdays()
+            print(show_all_birthdays(book))
 
         elif command == "search_by_date_birthday":
-            search_by_date_birthday()
+            date = input("Enter date (DD.MM.YYYY): ")
+            print(search_by_date_birthday([date], book))
 
+        elif command == "change_birthday":
+            name = input("Enter name: ")
+            new_birthday = input("Enter new birthday (DD.MM.YYYY): ")
+            print(change_birthday([name, new_birthday], book))
+
+        elif command == "delete_birthday":
+            name = input("Enter name: ")
+            print(delete_birthday([name], book))
+            
         elif command == "add_note":
             text = input("Enter note text: ")
             tags = input("Enter tags separated by comma: ").split(",")
