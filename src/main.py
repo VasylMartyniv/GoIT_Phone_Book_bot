@@ -38,8 +38,6 @@ def main():
     db = NotesBook()
 
     while True:
-        print("\nAvailable commands:")
-
         command = get_command_input()
         # Обробка команд
         if command == "hello":
@@ -47,6 +45,7 @@ def main():
 
         elif command == "help":
             print_commands()
+
         elif command == "add_contact":
             add_contact()
 

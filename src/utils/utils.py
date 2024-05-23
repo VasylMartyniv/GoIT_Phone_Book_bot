@@ -58,5 +58,6 @@ def say_hello():
 
 # Функція для друку команд у вигляді таблиці
 def print_commands():
+    print("\nAvailable commands:")
     table = [[cmd, description] for cmd, description in commands.items()]
     print(tabulate(table, headers=["Command", "Description"], tablefmt="grid"))
