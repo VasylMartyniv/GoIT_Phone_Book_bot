@@ -18,7 +18,10 @@ def completer(text, state):
 def get_command_input():
     while True:
         readline.set_completer(completer)
-        readline.parse_and_bind("tab: complete")
+        if 'libedit' in readline.__doc__:
+            readline.parse_and_bind("bind ^I rl_complete")
+        else:
+            readline.parse_and_bind("tab: complete")
 
         command = input("Введіть команду: ").strip()
 
