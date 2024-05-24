@@ -10,6 +10,8 @@ commands = {
     "show_birthday": "Показати день народження",
     "show_all_birthdays": "Показати всі дні народження",
     "search_by_date_birthday": "Пошук за датою народження",
+    "change_birthday": "Змінити день народження"
+    "delete_birthday": "Видалити день народження"
     "add_note": "Додати нотатку",
     "all_note": "Показати всі нотатки",
     "search_note": "Пошук нотаток за тегами",
