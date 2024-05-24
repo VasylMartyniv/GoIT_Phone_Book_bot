@@ -77,19 +77,23 @@ def main():
             delete_contact()
 
         
-        # Обробка команди "update_birthday" з перевіркою
         elif command == "add_birthday":
             user_id_input = input(
                 "Введіть ID користувача, дату народження якого потрібно оновити: "
             )
             try:
                 user_id = int(user_id_input)
-                new_birthday = input(
-                    "Введіть новий день народження у форматі 'DD-MM-YYYY': "
-                )
-                users_db.add_birthday(user_id, new_birthday)
+                # Перевіряємо, чи існує користувач з введеним ID
+                if users_db.get_user_by_id(user_id) is not None:
+                    new_birthday = input(
+                        "Введіть новий день народження у форматі 'DD-MM-YYYY': "
+                    )
+                    users_db.add_birthday(user_id, new_birthday)
+                else:
+                    print("Користувача з вказаним ID не знайдено.")
             except ValueError:
                 print("ID користувача повинно бути цілим числом.")
+
 
         # Обробка команди "delete_birthday"
         elif command == "delete_birthday":
@@ -99,8 +103,11 @@ def main():
                 )
                 try:
                     user_id = int(user_id_input)
-                    users_db.delete_birthday(user_id)
-                    break  # Вихід з циклу, якщо введення коректне
+                    if users_db.get_user_by_id(user_id) is not None:
+                        users_db.delete_birthday(user_id)
+                        break  # Вихід з циклу, якщо введення коректне
+                    else:
+                        print("Користувача з вказаним ID не знайдено.")
                 except ValueError:
                     print(
                         f"Неправильний ID користувача '{user_id_input}'. Будь ласка, введіть коректне ціле число."
@@ -187,36 +194,46 @@ def main():
             print_notes(sorted_notes)
 
         elif command == "delete_note":
-            note_id_input = input("Enter note ID to delete: ")
+            note_id_input = input("Введіть ID запису для видалення: ")
             try:
                 note_id = int(note_id_input)
-                if db.delete_note(note_id):
-                    print("Note deleted.")
-                    all_notes = db.get_all_notes()
-                    print_notes(all_notes)
+                if db.get_note_by_id(note_id) is not None:
+                    if db.delete_note(note_id):
+                        print("Запис видалено.")
+                        all_notes = db.get_all_notes()
+                        print_notes(all_notes)
+                    else:
+                        print("Запис з вказаним ID не знайдено.")
                 else:
-                    print("Note with the given ID not found.")
+                    print("Запис з вказаним ID не знайдено.")
             except ValueError:
                 print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
+                    f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
                 )
 
+
+
         elif command == "update_note":
-            note_id_input = input("Enter note ID to update: ")
+            note_id_input = input("Введіть ID запису, який потрібно оновити: ")
             try:
                 note_id = int(note_id_input)
-                text = input("Enter new text for the note: ")
-                tags = input("Enter new tags for the note separated by comma: ").split(",")
-                if db.update_note(note_id, text, tags):
-                    print("Note updated.")
-                    all_notes = db.get_all_notes()
-                    print_notes(all_notes)
+                # Перевіряємо, чи існує запис з введеним ID
+                if db.get_note_by_id(note_id) is not None:
+                    text = input("Введіть новий текст для запису: ")
+                    tags = input("Введіть нові теги для запису, розділені комами: ").split(",")
+                    if db.update_note(note_id, text, tags):
+                        print("Запис оновлено.")
+                        all_notes = db.get_all_notes()
+                        print_notes(all_notes)
+                    else:
+                        print("Запис з вказаним ID не знайдено.")
                 else:
-                    print("Note with the given ID not found.")
+                    print("Запис з вказаним ID не знайдено.")
             except ValueError:
                 print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
+                    f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
                 )
+
 
         elif command in ("exit", "close"):
             print("Closing the program. Goodbye!")

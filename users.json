@@ -7,7 +7,7 @@
     {
         "id": 2,
         "name": "test2",
-        "birthday": "26-05-2005"
+        "birthday": "26-05-2004"
     },
     {
         "id": 3,
@@ -27,7 +27,7 @@
     {
         "id": 6,
         "name": "test6",
-        "birthday": "11-11-1993"
+        "birthday": null
     },
     {
         "id": 7,

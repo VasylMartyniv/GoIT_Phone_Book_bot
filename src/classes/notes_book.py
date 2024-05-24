@@ -17,6 +17,13 @@ class NotesBook:
         self.next_id += 1
         self.save_notes()  # Збереження нотаток після додавання
 
+    # Метод для отримання запису за його ID
+    def get_note_by_id(self, note_id):
+        for note in self.notes:
+            if note.id == note_id:
+                return note
+        return None
+
     # Метод для отримання всіх нотаток
     def get_all_notes(self):
         return self.notes

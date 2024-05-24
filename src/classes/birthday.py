@@ -10,6 +10,12 @@ class UsersDatabase:
         self.next_id = 1
         self.load_users()  # Завантаження користувачів з файлу при створенні об'єкта
 
+    def get_user_by_id(self, user_id):
+        for user in self.users:
+            if user.id == user_id:
+                return user
+        return None
+
     # Функція для перевірки коректності дати народження
     def validate_date(self, birthday_str):
         try:
