@@ -1,8 +1,16 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
 import readline
 
+from tabulate import tabulate
+
 from src.classes.notes_book import NotesBook
+from src.classes.birthday import UsersDatabase
+from src.constants.commands import commands
 from src.utils.utils import *
-from src.classes.birthday import add_birthday, show_birthday, show_all_birthdays, search_by_date_birthday
 
 
 # Функція для автодоповнення команд
@@ -12,7 +20,6 @@ def completer(text, state):
         return options[state]
     else:
         return None
-
 
 # Функція для отримання введеної команди з автодоповненням
 def get_command_input():
@@ -37,6 +44,7 @@ def get_command_input():
 # Головна функція програми
 def main():
     db = NotesBook()
+    users_db = UsersDatabase()
 
     while True:
         command = get_command_input()
@@ -65,31 +73,98 @@ def main():
         elif command == "delete_contact":
             delete_contact()
 
+
         elif command == "add_birthday":
-            name = input("Enter name: ")
-            birthday = input("Enter birthday (DD.MM.YYYY): ")
-            print(add_birthday([name, birthday], book))
+            user_id_input = input(
+                "Введіть ID користувача, дату народження якого потрібно оновити: "
+            )
+            try:
+                user_id = int(user_id_input)
+                # Перевіряємо, чи існує користувач з введеним ID
+                if users_db.get_user_by_id(user_id) is not None:
+                    new_birthday = input(
+                        "Введіть новий день народження у форматі 'DD-MM-YYYY': "
+                    )
+                    users_db.add_birthday(user_id, new_birthday)
+                else:
+                    print("Користувача з вказаним ID не знайдено.")
+            except ValueError:
+                print("ID користувача повинно бути цілим числом.")
 
-        elif command == "show_birthday":
-            name = input("Enter name: ")
-            print(show_birthday([name], book))
-
-        elif command == "show_all_birthdays":
-            print(show_all_birthdays(book))
-
-        elif command == "search_by_date_birthday":
-            date = input("Enter date (DD.MM.YYYY): ")
-            print(search_by_date_birthday([date], book))
-
-        elif command == "change_birthday":
-            name = input("Enter name: ")
-            new_birthday = input("Enter new birthday (DD.MM.YYYY): ")
-            print(change_birthday([name, new_birthday], book))
-
+        # Обробка команди "delete_birthday"
         elif command == "delete_birthday":
-            name = input("Enter name: ")
-            print(delete_birthday([name], book))
-            
+            while True:
+                user_id_input = input(
+                    "Введіть ID користувача, для якого потрібно видалити день народження: "
+                )
+                try:
+                    user_id = int(user_id_input)
+                    if users_db.get_user_by_id(user_id) is not None:
+                        users_db.delete_birthday(user_id)
+                        break  # Вихід з циклу, якщо введення коректне
+                    else:
+                        print("Користувача з вказаним ID не знайдено.")
+                except ValueError:
+                    print(
+                        f"Неправильний ID користувача '{user_id_input}'. Будь ласка, введіть коректне ціле число."
+                    )
+
+        # Обробка команди "show_birthday"
+        elif command == "show_birthday":
+            user_id_input = input(
+                "Введіть ID користувача, для якого потрібно показати день народження: "
+            )
+            try:
+                user_id = int(user_id_input)
+                user = users_db.show_birthday(user_id)
+                if user:
+                    print(
+                        f"ID: {user.id}, Name: {user.name}, Birthday: {user.birthday if user.birthday else 'не встановлено'}"
+                    )
+                else:
+                    print("Користувача з вказаним ID не знайдено.")
+            except ValueError:
+                print(
+                    f"Неправильний ID користувача '{user_id_input}'. Будь ласка, введіть коректне ціле число."
+                )
+
+        # Обробка команди "show_all_birthdays"
+        elif command == "show_all_birthdays":
+            birthdays = users_db.show_all_birthdays()
+            for birthday in birthdays:
+                print(birthday)
+
+        # Обробка команди "search_by_date_birthday"
+        elif command == "search_by_date_birthday":
+            while True:
+                days_input = input(
+                    "Введіть кількість днів (максимум 365), на яку потрібно розширити проміжок для пошуку: "
+                )
+                try:
+                    days = int(days_input)
+                    if days > 365:
+                        print(
+                            "Кількість днів повинна бути не більше 365. Будь ласка, введіть коректне число."
+                        )
+                        continue  # Повернутись на початок циклу, щоб запитати введення знову
+                    matching_users = users_db.search_by_date_birthday(days)
+                    if matching_users:
+                        print(
+                            f"Контакти, у яких день народження відбувається в проміжку через {days} днів:"
+                        )
+                        for user in matching_users:
+                            print(
+                                f"ID: {user.id}, Name: {user.name}, Birthday: {user.birthday}"
+                            )
+                    else:
+                        print(
+                            f"Немає контактів, у яких день народження відбувається в проміжку через {days} днів."
+                        )
+                    break  # Вихід з циклу, якщо введення коректне
+                except ValueError:
+                    print("Неправильне значення днів. Будь ласка, введіть ціле число.")
+
+
         elif command == "add_note":
             text = input("Enter note text: ")
             tags = input("Enter tags separated by comma: ").split(",")
@@ -115,36 +190,44 @@ def main():
             print_notes(sorted_notes)
 
         elif command == "delete_note":
-            note_id_input = input("Enter note ID to delete: ")
+            note_id_input = input("Введіть ID запису для видалення: ")
             try:
                 note_id = int(note_id_input)
-                if db.delete_note(note_id):
-                    print("Note deleted.")
-                    all_notes = db.get_all_notes()
-                    print_notes(all_notes)
+                if db.get_note_by_id(note_id) is not None:
+                    if db.delete_note(note_id):
+                        print("Запис видалено.")
+                        all_notes = db.get_all_notes()
+                        print_notes(all_notes)
+                    else:
+                        print("Запис з вказаним ID не знайдено.")
                 else:
-                    print("Note with the given ID not found.")
+                    print("Запис з вказаним ID не знайдено.")
             except ValueError:
                 print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
+                    f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
                 )
 
         elif command == "update_note":
-            note_id_input = input("Enter note ID to update: ")
+            note_id_input = input("Введіть ID запису, який потрібно оновити: ")
             try:
                 note_id = int(note_id_input)
-                text = input("Enter new text for the note: ")
-                tags = input("Enter new tags for the note separated by comma: ").split(",")
-                if db.update_note(note_id, text, tags):
-                    print("Note updated.")
-                    all_notes = db.get_all_notes()
-                    print_notes(all_notes)
+                # Перевіряємо, чи існує запис з введеним ID
+                if db.get_note_by_id(note_id) is not None:
+                    text = input("Введіть новий текст для запису: ")
+                    tags = input("Введіть нові теги для запису, розділені комами: ").split(",")
+                    if db.update_note(note_id, text, tags):
+                        print("Запис оновлено.")
+                        all_notes = db.get_all_notes()
+                        print_notes(all_notes)
+                    else:
+                        print("Запис з вказаним ID не знайдено.")
                 else:
-                    print("Note with the given ID not found.")
+                    print("Запис з вказаним ID не знайдено.")
             except ValueError:
                 print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
+                    f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
                 )
+
 
         elif command in ("exit", "close"):
             print("Closing the program. Goodbye!")

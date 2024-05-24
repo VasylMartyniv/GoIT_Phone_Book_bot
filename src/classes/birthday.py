@@ -1,94 +1,134 @@
+import json
+
+from classes.field import Field
 from datetime import datetime, timedelta
-from addressbook import AddressBook, Record, Birthday
 
-# Декоратор для обробки помилок введення
-def input_error(func):
-    def inner(*args, **kwargs):
+# Клас для роботи з днем народженнями користувачів
+class UsersDatabase:
+    def __init__(self):
+        self.users = []
+        self.next_id = 1
+        self.load_users()  # Завантаження користувачів з файлу при створенні об'єкта
+
+    def get_user_by_id(self, user_id):
+        for user in self.users:
+            if user.id == user_id:
+                return user
+        return None
+
+    # Функція для перевірки коректності дати народження
+    def validate_date(self, birthday_str):
         try:
-            return func(*args, **kwargs)  # Викликає функцію, що передана декоратору
-        except IndexError:
-            return "Не достатньо аргументів. Будь ласка, дотримуйтесь формату команди."
+            birthday = datetime.strptime(birthday_str, "%d-%m-%Y")
+            today = datetime.now().date()
+            # Перевірка, чи дата не є у майбутньому
+            if birthday.date() > today:
+                print("Дата народження не може бути у майбутньому.")
+                return False
+            # Перевірка, чи дата не більше за 120 років у минулому
+            if today - birthday.date() > timedelta(days=365 * 120):
+                print("Дата народження не може бути більше за 120 років у минулому.")
+                return False
+            return True
         except ValueError:
-            return "Некоректні дані. Переконайтеся, що ви вводите правильні типи даних."
-        except KeyError:
-            return "Контакт не знайдено."
-    return inner
+            print(
+                "Некоректний формат дати народження. Будь ласка, введіть у форматі 'DD-MM-YYYY'."
+            )
+            return False
 
-# Функція для додавання дня народження до контакту
-@input_error
-def add_birthday(args, book):
-    if len(args) != 2:
-        raise IndexError("Please provide a name and a birthday in the format DD.MM.YYYY.")
-    name, birthday = args  # Отримуємо ім'я та дату народження з аргументів
-    record = book.find(name)  # Знаходимо контакт у книзі за ім'ям
-    if record:
-        record.add_birthday(birthday)  # Додаємо день народження до контакту
-        return f"Birthday for {name} added as {birthday}."
-    else:
-        raise KeyError(f"Contact '{name}' not found.")  # Виводимо помилку, якщо контакт не знайдено
+    # Метод для додавання контакту
+    def add_birthday(self, user_id, new_birthday):
+        while not self.validate_date(new_birthday):
+            new_birthday = input(
+                "Введіть новий день народження у форматі 'DD-MM-YYYY': "
+            )
+        for user in self.users:
+            if user.id == user_id:
+                user.birthday = new_birthday
+                self.save_users()
+                print("День народження оновлено.")
+                return True
+        print("Користувача з вказаним ID не знайдено.")
+        return False
 
-# Функція для показу дня народження контакту
-@input_error
-def show_birthday(args, book):
-    if len(args) != 1:
-        raise IndexError("Please provide a name.")
-    name = args[0]  # Отримуємо ім'я з аргументів
-    record = book.find(name)  # Знаходимо контакт у книзі за ім'ям
-    if record:
-        if record.birthday:
-            return f"{name}'s birthday is on {record.birthday.value.strftime('%d.%m.%Y')}."
-        else:
-            return f"{name} does not have a birthday set."
-    else:
-        raise KeyError(f"Contact '{name}' not found.")  # Виводимо помилку, якщо контакт не знайдено
+    def save_users(self):
+        with open("../users.json", "w") as file:
+            json_users = [
+                {"id": user.id, "name": user.name, "birthday": user.birthday}
+                for user in self.users
+            ]
+            json.dump(
+                json_users, file, indent=4
+            )  # Використовуйте indent для форматування JSON
 
-# Функція для показу всіх контактів з днями народження
-@input_error
-def show_all_birthdays(book):
-    birthdays = [str(record) for record in book.values() if record.birthday]  # Отримуємо всі контакти з днями народження
-    if not birthdays:
-        return "No birthdays available."
-    return "\n".join(birthdays)  # Повертаємо список контактів з днями народження
+    # Метод для завантаження користувачів з файлу
+    def load_users(self):
+        try:
+            with open("../users.json", "r") as file:
+                json_users = json.load(file)
+                self.users = [
+                    Field(user["id"], user["name"], str(user["id"]), user["birthday"])
+                    for user in json_users
+                ]
+                self.next_id = (
+                    max(self.users, key=lambda user: user.id).id + 1
+                    if self.users
+                    else 1
+                )
+        except FileNotFoundError:
+            pass
 
-# Функція для пошуку контактів за датою народження
-@input_error
-def search_by_date_birthday(args, book):
-    if len(args) != 1:
-        raise IndexError("Please provide a date in the format DD.MM.YYYY.")
-    date_str = args[0]  # Отримуємо дату з аргументів
-    try:
-        date = datetime.strptime(date_str, '%d.%m.%Y').date()  # Перетворюємо строку в дату
-    except ValueError:
-        raise ValueError("Invalid date format. Use DD.MM.YYYY")
-    
-    results = [str(record) for record in book.values() if record.birthday and record.birthday.value == date]  # Знаходимо контакти з відповідною датою народження
-    if not results:
-        return "No contacts found with this birthday."
-    return "\n".join(results)  # Повертаємо список контактів з цією датою народження
 
-# Функція для зміни дня народження контакту
-@input_error
-def change_birthday(args, book):
-    if len(args) != 2:
-        raise IndexError("Please provide a name and a new birthday in the format DD.MM.YYYY.")
-    name, new_birthday = args
-    record = book.find(name)
-    if record:
-        record.change_birthday(new_birthday)
-        return f"Birthday for {name} changed to {new_birthday}."
-    else:
-        raise KeyError(f"Contact '{name}' not found.")
+    # Метод для видалення дня народження користувача
+    def delete_birthday(self, user_id):
+        for user in self.users:
+            if user.id == user_id:
+                user.birthday = None  # Встановлюємо день народження користувача як None
+                self.save_users()
+                print("День народження користувача видалено.")
+                return True
+        print("Користувача з вказаним ID не знайдено.")
+        return False
 
-# Функція для видалення дня народження контакту
-@input_error
-def delete_birthday(args, book):
-    if len(args) != 1:
-        raise IndexError("Please provide a name.")
-    name = args[0]
-    record = book.find(name)
-    if record:
-        record.delete_birthday()
-        return f"Birthday for {name} deleted."
-    else:
-        raise KeyError(f"Contact '{name}' not found.")
+    # Метод для показу дня народження користувача
+    def show_birthday(self, user_id):
+        for user in self.users:
+            if user.id == user_id:
+                if user.birthday:
+                    # return str(user)  # Повертаємо користувача у вигляді рядка
+                    return user  # Повертаємо об'єкт користувача
+                else:
+                    return "День народження не встановлено для цього користувача."
+        return "Користувача з вказаним ID не знайдено."
 
+    # Метод для показу всіх днів народження
+    def show_all_birthdays(self):
+        birthdays = []
+        for user in self.users:
+            if user.birthday:
+                birthdays.append(
+                    f"ID: {user.id}, Name: {user.name}, Birthday: {user.birthday}"
+                )
+            else:
+                birthdays.append(
+                    f"ID: {user.id}, Name: {user.name}, Birthday: не встановлено"
+                )
+        return birthdays
+
+    # Метод для пошуку контактів за датою народження в заданому проміжку
+    def search_by_date_birthday(self, days):
+        today = datetime.now().date()
+        target_date = today + timedelta(days=days)
+        matching_users = []
+
+        for user in self.users:
+            if user.birthday:
+                # Перетворіть рядок з датою народження у об'єкт datetime.date
+                user_birthday = datetime.strptime(user.birthday, "%d-%m-%Y").date()
+                # Змініть рік дати народження на поточний
+                user_birthday_this_year = user_birthday.replace(year=today.year)
+                # Перевірте, чи дата народження відповідає заданому проміжку
+                if today <= user_birthday_this_year <= target_date:
+                    matching_users.append(user)
+
+        return matching_users
