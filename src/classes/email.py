@@ -29,6 +29,7 @@ class Email:
         else:
             raise ValueError("Invalid email format")
         
+"""
 # Приклад використання
 try:
     email = Email("example@example.com")
@@ -42,3 +43,4 @@ try:
     print(email)  # Виведе: new_example@example.com
 except ValueError as e:
     print(e)
+"""

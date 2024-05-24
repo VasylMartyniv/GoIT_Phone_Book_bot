@@ -33,6 +33,7 @@ class Phone:
             raise ValueError("Неправильний формат номера телефону, повинен бути '+380...'")
         
 
+"""
 # Приклад використання
 try:
     phone = Phone("+1234567890")
@@ -47,3 +48,4 @@ try:
 
 except ValueError as e:
     print(e)
+"""
