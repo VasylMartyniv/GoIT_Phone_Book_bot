@@ -1,6 +1,6 @@
 import json
 
-from src.classes.user import User
+from classes.field import Field
 from datetime import datetime, timedelta
 
 # Клас для роботи з днем народженнями користувачів
@@ -61,7 +61,7 @@ class UsersDatabase:
             with open("../users.json", "r") as file:
                 json_users = json.load(file)
                 self.users = [
-                    User(user["id"], user["name"], user["birthday"])
+                    Field(user["id"], user["name"], str(user["id"]), user["birthday"])
                     for user in json_users
                 ]
                 self.next_id = (
@@ -71,6 +71,7 @@ class UsersDatabase:
                 )
         except FileNotFoundError:
             pass
+
 
     # Метод для видалення дня народження користувача
     def delete_birthday(self, user_id):
