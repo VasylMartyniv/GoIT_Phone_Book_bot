@@ -13,8 +13,6 @@ from src.constants.commands import commands
 from src.utils.utils import *
 
 
-
-
 # Функція для автодоповнення команд
 def completer(text, state):
     options = [cmd for cmd in commands.keys() if cmd.startswith(text)]
@@ -22,7 +20,6 @@ def completer(text, state):
         return options[state]
     else:
         return None
-
 
 # Функція для отримання введеної команди з автодоповненням
 def get_command_input():
@@ -76,7 +73,7 @@ def main():
         elif command == "delete_contact":
             delete_contact()
 
-        
+
         elif command == "add_birthday":
             user_id_input = input(
                 "Введіть ID користувача, дату народження якого потрібно оновити: "
@@ -93,7 +90,6 @@ def main():
                     print("Користувача з вказаним ID не знайдено.")
             except ValueError:
                 print("ID користувача повинно бути цілим числом.")
-
 
         # Обробка команди "delete_birthday"
         elif command == "delete_birthday":
@@ -168,7 +164,7 @@ def main():
                 except ValueError:
                     print("Неправильне значення днів. Будь ласка, введіть ціле число.")
 
-        
+
         elif command == "add_note":
             text = input("Enter note text: ")
             tags = input("Enter tags separated by comma: ").split(",")
@@ -210,8 +206,6 @@ def main():
                 print(
                     f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
                 )
-
-
 
         elif command == "update_note":
             note_id_input = input("Введіть ID запису, який потрібно оновити: ")
