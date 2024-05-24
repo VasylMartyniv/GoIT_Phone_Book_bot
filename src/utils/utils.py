@@ -1,7 +1,5 @@
 from tabulate import tabulate
 
-from src.constants.commands import commands
-
 
 def add_contact():
     print("Feature coming soon")
