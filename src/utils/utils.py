@@ -44,6 +44,15 @@ def search_by_date_birthday():
     date = input("Enter date (DD.MM.YYYY): ")
     print(search_by_date_birthday([date], book))
 
+def change_birthday():
+    name = input("Enter name: ")
+    new_birthday = input("Enter new birthday (DD.MM.YYYY): ")
+    print(change_birthday([name, new_birthday], book))
+
+def delete_birthday():
+    name = input("Enter name: ")
+    print(delete_birthday([name], book))
+
 
 # Функція для друку нотаток у вигляді таблиці
 def print_notes(notes):
