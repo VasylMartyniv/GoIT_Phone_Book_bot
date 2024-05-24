@@ -27,20 +27,8 @@ def delete_contact():
     print("Feature coming soon")
 
 
-def add_birthday():
-    print("Feature coming soon")
 
 
-def show_birthday():
-    print("Feature coming soon")
-
-
-def show_all_birthdays():
-    print("Feature coming soon")
-
-
-def search_by_date_birthday():
-    print("Feature coming soon")
 
 
 # Функція для друку нотаток у вигляді таблиці

@@ -7,6 +7,7 @@ commands = {
     "all_contact": "Показати всі контакти",
     "delete_contact": "Видалити контакт",
     "add_birthday": "Додати день народження",
+    "delete_birthday": "Видалити день народження",  # додано видалити день народження зробити Null
     "show_birthday": "Показати день народження",
     "show_all_birthdays": "Показати всі дні народження",
     "search_by_date_birthday": "Пошук за датою народження",

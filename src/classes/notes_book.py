@@ -42,12 +42,21 @@ class NotesBook:
 
     # Метод для оновлення нотатки
     def update_note(self, id, text, tags):
+        while True:
+            try:
+                id = int(id)  # Перевірка, чи є id цілим числом
+                break  # Якщо id є цілим числом, вихід з циклу
+            except ValueError:
+                print("Неправильний формат ID. Будь ласка, введіть ціле число.")
+                id = input("Введіть ID нотатки для оновлення: ")
+
         for note in self.notes:
             if note.id == id:
                 note.text = text
                 note.tags = tags
                 self.save_notes()  # Збереження нотаток після оновлення
                 return True
+        print("Нотатки з таким ID не знайдено.")
         return False
 
     # Метод для збереження нотаток у файл
