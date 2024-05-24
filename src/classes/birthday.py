@@ -1,7 +1,8 @@
 import json
-
-from classes.field import Field
 from datetime import datetime, timedelta
+
+from src.classes.field import Field
+
 
 # Клас для роботи з днем народженнями користувачів
 class UsersDatabase:
@@ -77,7 +78,6 @@ class UsersDatabase:
                 )
         except FileNotFoundError:
             pass
-
 
     # Метод для видалення дня народження користувача
     def delete_birthday(self, user_id):

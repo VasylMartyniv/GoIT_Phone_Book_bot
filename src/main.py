@@ -1,15 +1,7 @@
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
 import readline
 
-from tabulate import tabulate
-
-from src.classes.notes_book import NotesBook
 from src.classes.birthday import UsersDatabase
-from src.constants.commands import commands
+from src.classes.notes_book import NotesBook
 from src.utils.utils import *
 
 
@@ -20,6 +12,7 @@ def completer(text, state):
         return options[state]
     else:
         return None
+
 
 # Функція для отримання введеної команди з автодоповненням
 def get_command_input():
