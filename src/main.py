@@ -52,6 +52,9 @@ def main():
         elif command == "add_phone":
             add_phone_to_contact()
 
+        elif command == "add_email":
+            add_phone_to_contact()
+
         elif command == "change_contact":
             change_contact()
 
