@@ -19,7 +19,7 @@ class AddressBook(UserDict):
         if self.data[name]:
             self.data[name] = Record(name)
         else:
-            raise ValueError("Елемент із вказаним іменем уже існує в AddressBook ")
+            raise ValueError("ERROR: An element with the specified name already exists in the AddressBook ")
     
     # Видаляти запис із списку
     def delete_record(self, name: str):
@@ -68,13 +68,13 @@ class AddressBook(UserDict):
         for record in self.data:
             if Phone(number) in record.numbers:
                 return record
-        raise KeyError("The item with the specified phone does not exist in AddressBook")
+        raise KeyError("ERROR: The item with the specified phone does not exist in AddressBook")
 
     def find_by_email(self, email: str):
         for record in self.data:
             if Email(email) in record.emails:
                 return record
-        raise KeyError("The item with the specified email does not exist in AddressBook")
+        raise KeyError("ERROR: The item with the specified email does not exist in AddressBook")
 
     # Суто для тестів!
     def show_all(self):
