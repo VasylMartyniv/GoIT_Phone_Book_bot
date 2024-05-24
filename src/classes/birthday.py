@@ -53,7 +53,7 @@ class UsersDatabase:
         return False
 
     def save_users(self):
-        with open("../users.json", "w") as file:
+        with open("users.json", "w") as file:
             json_users = [
                 {"id": user.id, "name": user.name, "birthday": user.birthday}
                 for user in self.users
@@ -65,7 +65,7 @@ class UsersDatabase:
     # Метод для завантаження користувачів з файлу
     def load_users(self):
         try:
-            with open("../users.json", "r") as file:
+            with open("users.json", "r") as file:
                 json_users = json.load(file)
                 self.users = [
                     Field(user["id"], user["name"], str(user["id"]), user["birthday"])

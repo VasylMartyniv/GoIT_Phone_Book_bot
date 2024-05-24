@@ -1,7 +1,16 @@
-import readline
+import sys
+import os
 
-from src.classes.birthday import UsersDatabase
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+# import readline
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
+# from tabulate import tabulate
+
 from src.classes.notes_book import NotesBook
+from src.classes.birthday import UsersDatabase
+from src.constants.commands import commands
 from src.utils.utils import *
 
 
@@ -13,26 +22,36 @@ def completer(text, state):
     else:
         return None
 
+# # Функція для отримання введеної команди з автодоповненням
+# def get_command_input():
+#     while True:
+#         readline.set_completer(completer)
+#         readline.parse_and_bind("tab: complete")
+
+#         command = input("Введіть команду: ").strip()
+
+#         matching_commands = [cmd for cmd in commands.keys() if cmd.startswith(command)]
+
+#         if len(matching_commands) == 1:
+#             return matching_commands[0]
+#         elif len(matching_commands) > 1:
+#             print("Кілька команд відповідають введеній частині. Будь ласка, уточніть:")
+#             for cmd in matching_commands:
+#                 print(f" - {cmd}")
+#         else:
+#             print("Команду не знайдено. Спробуйте ще раз.")
+# Створюємо список команд для автодоповнення
+command_completer = WordCompleter(list(commands.keys()), ignore_case=True)
 
 # Функція для отримання введеної команди з автодоповненням
 def get_command_input():
     while True:
-        readline.set_completer(completer)
-        if 'libedit' in readline.__doc__:
-            readline.parse_and_bind("bind ^I rl_complete")
-        else:
-            readline.parse_and_bind("tab: complete")
+        command = prompt("Введіть команду: ", completer=command_completer)
+        command = command.strip()
 
-        command = input("Введіть команду: ").strip()
-
-        matching_commands = [cmd for cmd in commands.keys() if cmd.startswith(command)]
-
-        if len(matching_commands) == 1:
-            return matching_commands[0]
-        elif len(matching_commands) > 1:
-            print("Кілька команд відповідають введеній частині. Будь ласка, уточніть:")
-            for cmd in matching_commands:
-                print(f" - {cmd}")
+        # Перевіряємо, чи існує команда
+        if command in commands:
+            return command
         else:
             print("Команду не знайдено. Спробуйте ще раз.")
 

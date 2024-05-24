@@ -68,7 +68,7 @@ class NotesBook:
 
     # Метод для збереження нотаток у файл
     def save_notes(self):
-        with open("../notes.json", "w") as file:
+        with open("notes.json", "w") as file:
             json_notes = [
                 {"id": note.id, "text": note.text, "tags": note.tags}
                 for note in self.notes
@@ -78,7 +78,7 @@ class NotesBook:
     # Метод для завантаження нотаток з файлу
     def load_notes(self):
         try:
-            with open("../notes.json", "r") as file:
+            with open("notes.json", "r") as file:
                 json_notes = json.load(file)
                 self.notes = [
                     Note(note["id"], note["text"], note["tags"]) for note in json_notes
