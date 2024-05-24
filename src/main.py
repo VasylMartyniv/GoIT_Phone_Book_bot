@@ -1,6 +1,14 @@
 import readline
+import os
+import sys
+from tabulate import tabulate
+
+# Додати шлях до модуля
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from src.classes.notes_book import NotesBook
+from src.classes.birthday import add_birthday, show_birthday, show_all_birthdays, search_by_date_birthday, change_birthday, delete_birthday
+from src.constants.commands import commands
 from src.utils.utils import *
 
 
@@ -65,25 +73,36 @@ def main():
             delete_contact()
 
         elif command == "add_birthday":
-            add_birthday()
+            name = input("Enter name: ")
+            birthday = input("Enter birthday (DD.MM.YYYY): ")
+            print(add_birthday([name, birthday], db))
 
         elif command == "show_birthday":
-            show_birthday()
+            name = input("Enter name: ")
+            print(show_birthday([name], db))
 
         elif command == "show_all_birthdays":
-            show_all_birthdays()
+            print(show_all_birthdays(db))
 
         elif command == "search_by_date_birthday":
-            search_by_date_birthday()
+            days = input("Enter number of days: ")
+            print(search_by_date_birthday([days], db))
+
+        elif command == "change_birthday":
+            name = input("Enter name: ")
+            new_birthday = input("Enter new birthday (DD.MM.YYYY): ")
+            print(change_birthday([name, new_birthday], db))
+
+        elif command == "delete_birthday":
+            name = input("Enter name: ")
+            print(delete_birthday([name], db))
 
         elif command == "add_note":
             text = input("Enter note text: ")
             tags = input("Enter tags separated by comma: ").split(",")
             db.add_note(text, tags)
             print("Note added.")
-            all_notes = (
-                db.get_all_notes()
-            )  # Оновлюємо all_notes після додавання нотатки
+            all_notes = db.get_all_notes()
             print_notes(all_notes)
 
         elif command == "all_note":
@@ -111,9 +130,7 @@ def main():
                 else:
                     print("Note with the given ID not found.")
             except ValueError:
-                print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
-                )
+                print(f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID.")
 
         elif command == "update_note":
             note_id_input = input("Enter note ID to update: ")
@@ -128,9 +145,7 @@ def main():
                 else:
                     print("Note with the given ID not found.")
             except ValueError:
-                print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
-                )
+                print(f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID.")
 
         elif command in ("exit", "close"):
             print("Closing the program. Goodbye!")
