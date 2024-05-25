@@ -1,10 +1,15 @@
-import readline
-import os
 import sys
+import os
+
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+
+import readline
+
+
 from tabulate import tabulate
 
-# Додати шлях до модуля
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from src.classes.notes_book import NotesBook
 from src.classes.birthday import add_birthday, show_birthday, show_all_birthdays, search_by_date_birthday, change_birthday, delete_birthday
