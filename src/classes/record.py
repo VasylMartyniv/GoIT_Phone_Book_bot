@@ -2,7 +2,6 @@ from datetime import datetime
 from src.classes.phone import Phone
 from src.classes.email import Email
 from src.classes.address import Address
-#from src.classes.birthday import Birthday
 
 class Record:
     def __init__(self, name: str):
@@ -80,7 +79,7 @@ class Record:
     
 
     ###
-    ### Tools for working with the field:   email               (повторити add та romove з phone!!!!!!)
+    ### Tools for working with the field:   email
     ###
     def add_email(self, email: str):
         self.emails.append(Email(email))
@@ -124,20 +123,4 @@ class Record:
     
     def remove_address(self):
         self.address = None
-
-
-    ###
-    ### Tools for working with the field:   birthday
-    ###
-    def add_birthday(self, birthday: str):
-        if birthday:
-            self.birthday = Birthday(birthday)
-        else:
-            raise ValueError("ERROR: The birtday is already specified")
-
-    def edit_birthday(self, new_birthday: datetime):
-        self.birthday = new_birthday
-    
-    def remove_birthday(self):
-        self.birthday = None
 
