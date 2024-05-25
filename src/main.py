@@ -1,6 +1,6 @@
 import readline
 
-from src.classes.birthday import UsersDatabase
+from src.classes.birthday import Birthday
 from src.classes.notes_book import NotesBook
 from src.utils.utils import *
 
@@ -37,7 +37,7 @@ def get_command_input():
 # Головна функція програми
 def main():
     db = NotesBook()
-    users_db = UsersDatabase()
+    users_db = Birthday()
 
     while True:
         command = get_command_input()
@@ -52,6 +52,9 @@ def main():
             add_contact()
 
         elif command == "add_phone":
+            add_phone_to_contact()
+
+        elif command == "add_email":
             add_phone_to_contact()
 
         elif command == "change_contact":

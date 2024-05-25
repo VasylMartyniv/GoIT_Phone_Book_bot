@@ -1,7 +1,7 @@
-from datetime import datetime
-from src.classes.phone import Phone
-from src.classes.email import Email
 from src.classes.address import Address
+from src.classes.email import Email
+from src.classes.phone import Phone
+
 
 class Record:
     def __init__(self, name: str):
@@ -45,23 +45,22 @@ class Record:
 
         # Зібрати стрічку
         return f"{name}{phones}{emails}{address}{birthday}" + "\n"
-    
 
     ###
     ### Tools for working with the field:   phones
     ###
     def add_phone(self, phone: str):
         self.phones.append(Phone(phone))
-    
+
     def edit_phone(self, old_phone: str, new_phone: str):
         is_exception = True
         for i in range(len(self.phones)):
             if self.phones[i].value == old_phone:
                 self.phones[i] = Phone(new_phone)
                 is_exception = False
-        if is_exception: 
+        if is_exception:
             raise ValueError("ERROR: There is no such phone")
-    
+
     def find_phone(self, phone: str):
         for element in self.phones:
             if element.value == phone:
@@ -74,16 +73,15 @@ class Record:
             if element.value == phone:
                 self.phones.remove(element)
                 is_exception = False
-        if is_exception: 
+        if is_exception:
             raise ValueError("ERROR: There is no such phone")
-    
 
     ###
     ### Tools for working with the field:   email
     ###
     def add_email(self, email: str):
         self.emails.append(Email(email))
-    
+
     def edit_email(self, old_email: str, new_email: str):
         is_exception = True
         for i in range(len(self.emails)):
@@ -92,7 +90,7 @@ class Record:
                 is_exception = False
         if is_exception:
             raise ValueError("ERROR: There is no such email")
-    
+
     def find_email(self, email: str):
         for element in self.emails:
             if element.value == email:
@@ -107,7 +105,6 @@ class Record:
                 is_exception = False
         if is_exception:
             raise ValueError("ERROR: There is no such email")
-    
 
     ###
     ### Tools for working with the field:   address
@@ -120,7 +117,6 @@ class Record:
 
     def edit_address(self, new_address: str):
         self.address = Address(new_address)
-    
+
     def remove_address(self):
         self.address = None
-
