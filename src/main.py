@@ -1,13 +1,7 @@
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
 import readline
 
-from tabulate import tabulate
-
 from src.classes.notes_book import NotesBook
+from src.constants.commands import commands
 from src.classes.birthday import UsersDatabase
 from src.constants.commands import commands
 from src.utils.utils import *
@@ -20,6 +14,7 @@ def completer(text, state):
         return options[state]
     else:
         return None
+
 
 # Функція для отримання введеної команди з автодоповненням
 def get_command_input():
@@ -193,39 +188,32 @@ def main():
             note_id_input = input("Введіть ID запису для видалення: ")
             try:
                 note_id = int(note_id_input)
-                if db.get_note_by_id(note_id) is not None:
-                    if db.delete_note(note_id):
-                        print("Запис видалено.")
-                        all_notes = db.get_all_notes()
-                        print_notes(all_notes)
-                    else:
-                        print("Запис з вказаним ID не знайдено.")
+                if db.delete_note(note_id):
+                    print("Note deleted.")
+                    all_notes = db.get_all_notes()
+                    print_notes(all_notes)
                 else:
-                    print("Запис з вказаним ID не знайдено.")
+                    print("Note with the given ID not found.")
             except ValueError:
                 print(
-                    f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
+                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
                 )
 
         elif command == "update_note":
-            note_id_input = input("Введіть ID запису, який потрібно оновити: ")
+            note_id_input = input("Enter note ID to update: ")
             try:
                 note_id = int(note_id_input)
-                # Перевіряємо, чи існує запис з введеним ID
-                if db.get_note_by_id(note_id) is not None:
-                    text = input("Введіть новий текст для запису: ")
-                    tags = input("Введіть нові теги для запису, розділені комами: ").split(",")
-                    if db.update_note(note_id, text, tags):
-                        print("Запис оновлено.")
-                        all_notes = db.get_all_notes()
-                        print_notes(all_notes)
-                    else:
-                        print("Запис з вказаним ID не знайдено.")
+                text = input("Enter new text for the note: ")
+                tags = input("Enter new tags for the note separated by comma: ").split(",")
+                if db.update_note(note_id, text, tags):
+                    print("Note updated.")
+                    all_notes = db.get_all_notes()
+                    print_notes(all_notes)
                 else:
-                    print("Запис з вказаним ID не знайдено.")
+                    print("Note with the given ID not found.")
             except ValueError:
                 print(
-                    f"Некоректний ID запису '{note_id_input}'. Будь ласка, введіть ціле число."
+                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
                 )
 
 
