@@ -2,7 +2,6 @@ from tabulate import tabulate
 
 from src.constants.commands import commands
 
-from src.classes.birthday import add_birthday, show_birthday, show_all_birthdays, search_by_date_birthday
 
 def add_contact():
     print("Feature coming soon")
@@ -28,30 +27,28 @@ def delete_contact():
     print("Feature coming soon")
 
 
-def add_birthday():
-    name = input("Enter name: ")
-    birthday = input("Enter birthday (DD.MM.YYYY): ")
-    print(add_birthday([name, birthday], book))
+def add_birthday(book):
+    print("Feature coming soon")
 
-def show_birthday():
-    name = input("Enter name: ")
-    print(show_birthday([name], book))
 
-def show_all_birthdays():
-    print(show_all_birthdays(book))
+def show_birthday(book):
+    print("Feature coming soon")
 
-def search_by_date_birthday():
-    date = input("Enter date (DD.MM.YYYY): ")
-    print(search_by_date_birthday([date], book))
 
-def change_birthday():
-    name = input("Enter name: ")
-    new_birthday = input("Enter new birthday (DD.MM.YYYY): ")
-    print(change_birthday([name, new_birthday], book))
+def show_all_birthdays(book):
+    print("Feature coming soon")
 
-def delete_birthday():
-    name = input("Enter name: ")
-    print(delete_birthday([name], book))
+
+def search_by_date_birthday(book):
+    print("Feature coming soon")
+
+
+def change_birthday(book):
+    print("Feature coming soon")
+
+
+def delete_birthday(book):
+    print("Feature coming soon")
 
 
 # Функція для друку нотаток у вигляді таблиці
