@@ -1,6 +1,7 @@
 import readline
 
 from src.classes.notes_book import NotesBook
+from src.constants.commands import commands
 from src.utils.utils import *
 
 
