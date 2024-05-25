@@ -1,6 +1,5 @@
 import readline
 
-from src.classes.birthday import Birthday
 from src.classes.notes_book import NotesBook
 from src.utils.utils import *
 
@@ -36,191 +35,99 @@ def get_command_input():
 
 # Головна функція програми
 def main():
-    db = NotesBook()
-    users_db = Birthday()
+    notes_db = NotesBook()
+    users_db = load_contacts()
+    try:
+        while True:
+            command = get_command_input()
+            # Обробка команд
+            if command == "hello":
+                say_hello()
 
-    while True:
-        command = get_command_input()
-        # Обробка команд
-        if command == "hello":
-            say_hello()
+            elif command == "help":
+                list_commands()
 
-        elif command == "help":
-            print_commands()
+            elif command == "all_contacts":
+                print(users_db)
 
-        elif command == "add_contact":
-            add_contact()
+            elif command == "add_contact":
+                add_contact(users_db)
 
-        elif command == "add_phone":
-            add_phone_to_contact()
+            if command == "search_contact":
+                search_contact(users_db)
 
-        elif command == "add_email":
-            add_phone_to_contact()
+            elif command == "change_contact":
+                change_contact(users_db)
 
-        elif command == "change_contact":
-            change_contact()
+            elif command == "delete_contact":
+                delete_contact(users_db)
 
-        elif command == "search_by_phone":
-            search_by_phone()
+            elif command == "add_phone":
+                add_phone(users_db)
 
-        elif command == "all_contact":
-            all_contact()
+            elif command == "delete_phone":
+                delete_phone(users_db)
 
-        elif command == "delete_contact":
-            delete_contact()
+            elif command == "change_phone":
+                change_phone(users_db)
 
+            elif command == "search_by_phone":
+                search_by_phone(users_db)
 
-        elif command == "add_birthday":
-            user_id_input = input(
-                "Введіть ID користувача, дату народження якого потрібно оновити: "
-            )
-            try:
-                user_id = int(user_id_input)
-                # Перевіряємо, чи існує користувач з введеним ID
-                if users_db.get_user_by_id(user_id) is not None:
-                    new_birthday = input(
-                        "Введіть новий день народження у форматі 'DD-MM-YYYY': "
-                    )
-                    users_db.add_birthday(user_id, new_birthday)
-                else:
-                    print("Користувача з вказаним ID не знайдено.")
-            except ValueError:
-                print("ID користувача повинно бути цілим числом.")
+            elif command == "add_email":
+                add_email(users_db)
 
-        # Обробка команди "delete_birthday"
-        elif command == "delete_birthday":
-            while True:
-                user_id_input = input(
-                    "Введіть ID користувача, для якого потрібно видалити день народження: "
-                )
-                try:
-                    user_id = int(user_id_input)
-                    if users_db.get_user_by_id(user_id) is not None:
-                        users_db.delete_birthday(user_id)
-                        break  # Вихід з циклу, якщо введення коректне
-                    else:
-                        print("Користувача з вказаним ID не знайдено.")
-                except ValueError:
-                    print(
-                        f"Неправильний ID користувача '{user_id_input}'. Будь ласка, введіть коректне ціле число."
-                    )
+            elif command == "change_email":
+                change_email(users_db)
 
-        # Обробка команди "show_birthday"
-        elif command == "show_birthday":
-            user_id_input = input(
-                "Введіть ID користувача, для якого потрібно показати день народження: "
-            )
-            try:
-                user_id = int(user_id_input)
-                user = users_db.show_birthday(user_id)
-                if user:
-                    print(
-                        f"ID: {user.id}, Name: {user.name}, Birthday: {user.birthday if user.birthday else 'не встановлено'}"
-                    )
-                else:
-                    print("Користувача з вказаним ID не знайдено.")
-            except ValueError:
-                print(
-                    f"Неправильний ID користувача '{user_id_input}'. Будь ласка, введіть коректне ціле число."
-                )
+            elif command == "delete_email":
+                delete_email(users_db)
 
-        # Обробка команди "show_all_birthdays"
-        elif command == "show_all_birthdays":
-            birthdays = users_db.show_all_birthdays()
-            for birthday in birthdays:
-                print(birthday)
+            elif command == "search_by_email":
+                search_by_email(users_db)
 
-        # Обробка команди "search_by_date_birthday"
-        elif command == "search_by_date_birthday":
-            while True:
-                days_input = input(
-                    "Введіть кількість днів (максимум 365), на яку потрібно розширити проміжок для пошуку: "
-                )
-                try:
-                    days = int(days_input)
-                    if days > 365:
-                        print(
-                            "Кількість днів повинна бути не більше 365. Будь ласка, введіть коректне число."
-                        )
-                        continue  # Повернутись на початок циклу, щоб запитати введення знову
-                    matching_users = users_db.search_by_date_birthday(days)
-                    if matching_users:
-                        print(
-                            f"Контакти, у яких день народження відбувається в проміжку через {days} днів:"
-                        )
-                        for user in matching_users:
-                            print(
-                                f"ID: {user.id}, Name: {user.name}, Birthday: {user.birthday}"
-                            )
-                    else:
-                        print(
-                            f"Немає контактів, у яких день народження відбувається в проміжку через {days} днів."
-                        )
-                    break  # Вихід з циклу, якщо введення коректне
-                except ValueError:
-                    print("Неправильне значення днів. Будь ласка, введіть ціле число.")
+            elif command == "add_birthday":
+                add_birthday(users_db)
 
+            elif command == "delete_birthday":
+                delete_birthday(users_db)
 
-        elif command == "add_note":
-            text = input("Enter note text: ")
-            tags = input("Enter tags separated by comma: ").split(",")
-            db.add_note(text, tags)
-            print("Note added.")
-            all_notes = (
-                db.get_all_notes()
-            )  # Оновлюємо all_notes після додавання нотатки
-            print_notes(all_notes)
+            elif command == "show_birthday":
+                show_birthday(users_db)
 
-        elif command == "all_note":
-            all_notes = db.get_all_notes()
-            print_notes(all_notes)
+            elif command == "show_all_birthdays":
+                show_all_birthdays(users_db)
 
-        elif command == "search_note":
-            search_tags = input("Enter tags to search separated by comma: ").split(",")
-            found_notes = db.search_notes_by_tags(search_tags)
-            print_notes(found_notes)
+            elif command == "search_by_date_birthday":
+                search_by_date_birthday(users_db)
 
-        elif command == "sorting_note_by_tags":
-            sort_tags = input("Enter tags to sort by separated by comma: ").split(",")
-            sorted_notes = db.sort_notes_by_tags(sort_tags)
-            print_notes(sorted_notes)
+            elif command == "show_next_birthday":
+                show_next_birthday(users_db)
 
-        elif command == "delete_note":
-            note_id_input = input("Введіть ID запису для видалення: ")
-            try:
-                note_id = int(note_id_input)
-                if db.delete_note(note_id):
-                    print("Note deleted.")
-                    all_notes = db.get_all_notes()
-                    print_notes(all_notes)
-                else:
-                    print("Note with the given ID not found.")
-            except ValueError:
-                print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
-                )
+            elif command == "add_note":
+                add_note(notes_db)
 
-        elif command == "update_note":
-            note_id_input = input("Enter note ID to update: ")
-            try:
-                note_id = int(note_id_input)
-                text = input("Enter new text for the note: ")
-                tags = input("Enter new tags for the note separated by comma: ").split(",")
-                if db.update_note(note_id, text, tags):
-                    print("Note updated.")
-                    all_notes = db.get_all_notes()
-                    print_notes(all_notes)
-                else:
-                    print("Note with the given ID not found.")
-            except ValueError:
-                print(
-                    f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
-                )
+            elif command == "all_notes":
+                all_notes(notes_db)
 
+            elif command == "search_note":
+                search_note_by_tags(notes_db)
 
-        elif command in ("exit", "close"):
-            print("Closing the program. Goodbye!")
-            break
+            elif command == "sorting_note_by_tags":
+                sorting_note_by_tags(notes_db)
+
+            elif command == "delete_note":
+                delete_note_by_id(notes_db)
+
+            elif command == "update_note":
+                update_note(notes_db)
+
+            elif command in ("exit", "close"):
+                save_contacts(users_db)
+                print("Closing the program. Goodbye!")
+                break
+    except Exception as e:
+        print(str(e))
 
 
 if __name__ == "__main__":

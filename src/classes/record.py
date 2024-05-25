@@ -46,17 +46,15 @@ class Record:
         # Зібрати стрічку
         return f"{name}{phones}{emails}{address}{birthday}" + "\n"
 
-    ###
-    ### Tools for working with the field:   phones
-    ###
-    def add_phone(self, phone: str):
+    # Tools for working with the field:   phones
+    def add_phone(self, phone):
         self.phones.append(Phone(phone))
 
     def edit_phone(self, old_phone: str, new_phone: str):
         is_exception = True
         for i in range(len(self.phones)):
             if self.phones[i].value == old_phone:
-                self.phones[i] = Phone(new_phone)
+                self.phones[i].change_number(new_phone)
                 is_exception = False
         if is_exception:
             raise ValueError("ERROR: There is no such phone")
@@ -76,9 +74,8 @@ class Record:
         if is_exception:
             raise ValueError("ERROR: There is no such phone")
 
-    ###
-    ### Tools for working with the field:   email
-    ###
+    # Tools for working with the field:   email
+
     def add_email(self, email: str):
         self.emails.append(Email(email))
 
@@ -86,7 +83,7 @@ class Record:
         is_exception = True
         for i in range(len(self.emails)):
             if self.emails[i].value == old_email:
-                self.emails[i] = Email(new_email)
+                self.emails[i].change_email(new_email)
                 is_exception = False
         if is_exception:
             raise ValueError("ERROR: There is no such email")
@@ -106,17 +103,16 @@ class Record:
         if is_exception:
             raise ValueError("ERROR: There is no such email")
 
-    ###
-    ### Tools for working with the field:   address
-    ###
+    # Tools for working with the field:   address
+
     def add_address(self, address: str):
-        if self.address == None:
+        if self.address is None:
             self.address = Address(address)
         else:
             raise ValueError("ERROR: The address is already specified")
 
     def edit_address(self, new_address: str):
-        self.address = Address(new_address)
+        self.address.change_address(new_address)
 
     def remove_address(self):
         self.address = None

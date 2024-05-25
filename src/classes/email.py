@@ -10,7 +10,8 @@ class Email(Field):
         else:
             raise ValueError("Invalid email format")
 
-    def validate_email(self, email):
+    @staticmethod
+    def validate_email(email):
         """
         Валідує email-адресу.
         """

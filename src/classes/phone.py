@@ -13,7 +13,8 @@ class Phone(Field):
         else:
             raise ValueError("Неправильний формат номера телефону, повинен бути '+380...'")
 
-    def validate_phone(self, number):
+    @staticmethod
+    def validate_phone(number):
         """
         Валідує номер телефону.
         """

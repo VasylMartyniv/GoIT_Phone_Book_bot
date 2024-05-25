@@ -36,9 +36,16 @@ class NotesBook:
 
     # Метод для видалення нотатки за ідентифікатором
     def delete_note(self, id):
-        self.notes = [note for note in self.notes if note.id != id]
+        new_notes = []
+        deleted = False
+        for note in self.notes:
+            if note.id == id:
+                deleted = True
+                continue
+            new_notes.append(note)
+        self.notes = new_notes
         self.save_notes()  # Збереження нотаток після видалення
-        return True
+        return deleted
 
     # Метод для оновлення нотатки
     def update_note(self, id, text, tags):
