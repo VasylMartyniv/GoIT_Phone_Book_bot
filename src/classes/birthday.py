@@ -5,7 +5,7 @@ from src.classes.field import Field
 
 
 # Клас для роботи з днем народженнями користувачів
-class UsersDatabase:
+class Birthday:
     def __init__(self):
         self.users = []
         self.next_id = 1

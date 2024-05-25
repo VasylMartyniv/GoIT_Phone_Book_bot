@@ -1,11 +1,12 @@
 import re
+
 from src.classes.field import Field
 
+
 class Email(Field):
-    def __init__(self, email, value):
+    def __init__(self, email):
         if self.validate_email(email):
-            self.value = email
-            super().__init__(value)
+            super().__init__(email)
         else:
             raise ValueError("Invalid email format")
 

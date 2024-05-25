@@ -1,4 +1,5 @@
 import re
+
 from src.classes.field import Field
 
 
@@ -9,7 +10,6 @@ class Phone(Field):
         """
         if self.validate_phone(number):
             super().__init__(number)
-            self.value = number
         else:
             raise ValueError("Неправильний формат номера телефону, повинен бути '+380...'")
 
@@ -34,4 +34,3 @@ class Phone(Field):
             self.value = new_number
         else:
             raise ValueError("Неправильний формат номера телефону, повинен бути '+380...'")
-
