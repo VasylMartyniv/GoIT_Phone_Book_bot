@@ -45,7 +45,7 @@ class Record:
             birthday = ""
 
         # Зібрати стрічку
-        return f"{name}{phones}{emails}{address}{birthday}"
+        return f"{name}{phones}{emails}{address}{birthday}" + "\n"
     
 
     ###
@@ -95,7 +95,7 @@ class Record:
             raise ValueError("ERROR: There is no such email")
     
     def find_email(self, email: str):
-        for element in self.email:
+        for element in self.emails:
             if element.value == email:
                 return email
         return None

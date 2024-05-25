@@ -9,29 +9,37 @@ class AddressBook(UserDict):
     def __str__(self) -> str: 
         all_address_book = str()
         for record in self.data:
-            record_line = f"{record.name.value} {record.phone.value} {record.email.value} {record.birthday.value} \n"
-            all_address_book += record_line
-        return all_address_book
+            all_address_book += str(self.data[record])
+        return all_address_book + "End of the addressbook"
         
-
     # Додавати новий запис у список
-    def add_record(self, name: str):
-        if self.data[name]:
-            self.data[name] = Record(name)
-        else:
+    def add_record(self, record: Record):
+        if record.name in self.data:
             raise ValueError("ERROR: An element with the specified name already exists in the AddressBook ")
-    
+        else:
+            self.data[record.name] = record
+
     # Видаляти запис із списку
-    def delete_record(self, name: str):
-        self.data.pop(name)
+    def delete_record(self, record: Record):
+        if record.name in self.data:
+            self.data.pop(record.name)
+        else:
+            raise ValueError("ERROR: An element does not exist in the AddressBook ")
     
     # Змінювати ключ запису (Це зміна імені разом із зміною імені у запису через метод класу Record)
-    def change_record(self, old_name: str, new_name: str):
-        self.data[new_name] = self.data[old_name]
-        del self.data[old_name]
+    def change_record_name(self, old_record: Record, new_name: str):
+        if old_record.name in self.data:
+            if new_name in self.data:
+                raise ValueError("ERROR: An element with the specified name already exists in the AddressBook ")
+            else: 
+                self.data[new_name] = self.data[old_record.name]
+                self.data[new_name].name = new_name
+                del self.data[old_record.name]
+        else:
+            raise ValueError("ERROR: An element does not exist in the AddressBook ")
 
     # Виводити список всіх днів народження за наступні N днів.
-    def show_next_birthdays(self, number_of_days: int):
+    def show_next_birthdays(self, number_of_days: int):    # Не перевірено, підозрюю що працює неправильно!!!
 
         def is_day_will_take_place_in_days(day: datetime, days: int):
             first_control_day = datetime.today().date()
@@ -59,26 +67,43 @@ class AddressBook(UserDict):
     #   Види пошуку: за номером, за іменем, за поштою.
     #   Вийнятки: контакт не існує, декілька контактів з однаковим іменем (вивід всіх)
     def find_by_name(self, name: str):
-        if self.data[name]:
+        if name in self.data:
             return self.data[name]
         else:
             raise KeyError("The item with the specified name does not exist in AddressBook")
     
-    def find_by_phone(self, number: str):
+    def find_by_phone(self, phone: str):
         for record in self.data:
-            if Phone(number) in record.numbers:
-                return record
+            if self.data[record].find_phone(phone):
+                return self.data[record]
         raise KeyError("ERROR: The item with the specified phone does not exist in AddressBook")
 
     def find_by_email(self, email: str):
         for record in self.data:
-            if Email(email) in record.emails:
-                return record
+            if self.data[record].find_email(email):
+                return self.data[record]
         raise KeyError("ERROR: The item with the specified email does not exist in AddressBook")
 
-    # Суто для тестів!
-    def show_all(self):
-        for name, record in self.data.items():
-            for phone in record.phones:
-                print(f"{name}: {phone.value} {record.birthday}")
 
+##### Testing:
+
+# book = AddressBook()
+
+# jhon = Record("Jhon")
+# jhon.add_phone("0632588820")
+# jhon.add_address("UA")
+# jhon.add_email("senik.yu@gmail.com")
+
+# emma = Record("Emma")
+# emma.add_phone("0632588819")
+# emma.add_email("emma@gmail.com")
+
+# eminem = Record("Eminem")
+# eminem.add_phone("0631111111")
+
+# book.add_record(jhon)
+# book.add_record(emma)
+
+# print(book)
+
+# print(book.find_by_email("s.yu@gmail.com"))
