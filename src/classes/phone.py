@@ -1,12 +1,15 @@
 import re
+from src.classes.field import Field
 
-class Phone:
+
+class Phone(Field):
     def __init__(self, number):
         """
         Ініціалізує об'єкт Phone з заданим номером телефону та виконує валідацію.
         """
         if self.validate_phone(number):
-            self.number = number
+            super().__init__(number)
+            self.value = number
         else:
             raise ValueError("Неправильний формат номера телефону, повинен бути '+380...'")
 
@@ -21,31 +24,14 @@ class Phone:
         """
         Повертає номер телефону як строку.
         """
-        return self.number
+        return self.value
 
     def change_number(self, new_number):
         """
         Змінює номер телефону, якщо він є валідним.
         """
         if self.validate_phone(new_number):
-            self.number = new_number
+            self.value = new_number
         else:
             raise ValueError("Неправильний формат номера телефону, повинен бути '+380...'")
-        
 
-"""
-# Приклад використання
-try:
-    phone = Phone("+1234567890")
-    print(phone)  # Виведе: +1234567890
-
-except ValueError as e:
-    print(e)
-
-try:
-    phone.change_number("+0987654321")
-    print(phone)  # Виведе: +0987654321
-
-except ValueError as e:
-    print(e)
-"""

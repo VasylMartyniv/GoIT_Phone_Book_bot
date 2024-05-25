@@ -1,9 +1,11 @@
 import re
+from src.classes.field import Field
 
-class Email:
-    def __init__(self, email):
+class Email(Field):
+    def __init__(self, email, value):
         if self.validate_email(email):
-            self.email = email
+            self.value = email
+            super().__init__(value)
         else:
             raise ValueError("Invalid email format")
 
@@ -18,29 +20,13 @@ class Email:
         """
         Повертає email-адресу як строку.
         """
-        return self.email
+        return self.value
 
     def change_email(self, new_email):
         """
         Змінює email-адресу, якщо вона є валідною.
         """
         if self.validate_email(new_email):
-            self.email = new_email
+            self.value = new_email
         else:
             raise ValueError("Invalid email format")
-        
-"""
-# Приклад використання
-try:
-    email = Email("example@example.com")
-    print(email)  # Виведе: example@example.com
-
-except ValueError as e:
-    print(e)
-
-try:
-    email.change_email("new_example@example.com")
-    print(email)  # Виведе: new_example@example.com
-except ValueError as e:
-    print(e)
-"""

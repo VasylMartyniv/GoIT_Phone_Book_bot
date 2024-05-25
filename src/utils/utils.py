@@ -27,19 +27,27 @@ def delete_contact():
     print("Feature coming soon")
 
 
-def add_birthday():
+def add_birthday(book):
     print("Feature coming soon")
 
 
-def show_birthday():
+def show_birthday(book):
     print("Feature coming soon")
 
 
-def show_all_birthdays():
+def show_all_birthdays(book):
     print("Feature coming soon")
 
 
-def search_by_date_birthday():
+def search_by_date_birthday(book):
+    print("Feature coming soon")
+
+
+def change_birthday(book):
+    print("Feature coming soon")
+
+
+def delete_birthday(book):
     print("Feature coming soon")
 
 
