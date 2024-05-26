@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='goit-phone-book-bot',
-    version='0.1.0',
+    version='0.2.0',
     author='Vasyl Martyniv',
     author_email='doc.people97@gmail.com',
     description='Phone Book bot developed by team #5 - CREATORS',

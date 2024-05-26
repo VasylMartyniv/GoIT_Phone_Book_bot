@@ -1,7 +1,7 @@
 import readline
 
-from src.classes.notes_book import NotesBook
-from src.utils.utils import *
+from .classes.notes_book import NotesBook
+from .utils.utils import *
 
 
 # Функція для автодоповнення команд
