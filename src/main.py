@@ -17,7 +17,10 @@ def completer(text, state):
 def get_command_input():
     while True:
         readline.set_completer(completer)
-        readline.parse_and_bind("tab: complete")
+        if readline.__doc__ is not None and 'libedit' in readline.__doc__:
+            readline.parse_and_bind("bind ^I rl_complete")
+        else:
+            readline.parse_and_bind("tab: complete")
 
         command = input("Введіть команду: ").strip()
 
@@ -37,8 +40,9 @@ def get_command_input():
 def main():
     notes_db = NotesBook()
     users_db = load_contacts()
-    try:
-        while True:
+
+    while True:
+        try:
             command = get_command_input()
             # Обробка команд
             if command == "hello":
@@ -126,8 +130,8 @@ def main():
                 save_contacts(users_db)
                 print("Closing the program. Goodbye!")
                 break
-    except Exception as e:
-        print(str(e))
+        except Exception as e:
+            print(str(e))
 
 
 if __name__ == "__main__":
