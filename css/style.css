@@ -10296,3 +10296,50 @@ textarea {
           margin-bottom: 0.4em; /* Adjust this value to your preference */
       }
 
+
+      .site-nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background-color: #007BFF; /* Синій колір */
+    }
+
+    .full-screen-hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/img-3.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      text-align: center;
+  }
+
+  .full-screen-hero  {
+      max-width: 100%;
+      padding: 0;
+  }
+
+  .full-screen-hero .row {
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .full-screen-hero .col-lg-6 {
+      max-width: 100%;
+      padding: 0 20px;
+  }
+
+  .full-screen-hero h1,
+  .full-screen-hero p {
+      margin-bottom: 20px;
+  }
+
+  .full-screen-hero a {
+      margin-right: 10px;
+  }
