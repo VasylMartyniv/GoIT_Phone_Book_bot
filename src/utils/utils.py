@@ -1,5 +1,5 @@
 import pickle
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from tabulate import tabulate
 
@@ -25,14 +25,12 @@ def save_contacts(book, filename="addressbook.pkl"):
     with open(filename, "wb") as f:
         pickle.dump(book, f)
 
-
 def load_contacts(filename="addressbook.pkl"):
     try:
         with open(filename, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
         return AddressBook()
-
 
 # CONTACTS
 
@@ -131,10 +129,16 @@ def add_email(users_db):
     email = input("Enter the email: ")
     try:
         contact = users_db.find_by_name(name)
-        contact.add_email(email)
-        print("Email added successfully.")
-    except KeyError:
-        print("Contact not found.")
+        if contact:
+            # Check if the email already exists
+            if contact.find_email(email):
+                raise ValueError("ERROR: Email already exists")
+            contact.add_email(email)
+            print("Email added successfully.")
+        else:
+            print("Contact not found.")
+    except ValueError as e:
+        print(e)
 
 
 def change_email(users_db):
@@ -143,10 +147,13 @@ def change_email(users_db):
     new_email = input("Enter the new email: ")
     try:
         contact = users_db.find_by_name(name)
-        contact.edit_email(old_email, new_email)
-        print("Email changed successfully.")
-    except KeyError:
-        print("Contact or email not found.")
+        if contact:
+            contact.edit_email(old_email, new_email)
+            print("Email changed successfully.")
+        else:
+            print("Contact not found.")
+    except ValueError as e:
+        print(e)
 
 
 def delete_email(users_db):
@@ -154,10 +161,15 @@ def delete_email(users_db):
     email = input("Enter the email to delete: ")
     try:
         contact = users_db.find_by_name(name)
-        contact.remove_email(email)
-        print("Email deleted successfully.")
-    except KeyError:
-        print("Contact or email not found.")
+        if contact:
+            # Attempt to remove the email
+            if not contact.remove_email(email):
+                raise ValueError("Email deleted successfully.")
+            print("Email deleted successfully.")
+        else:
+            print("Contact not found.")
+    except ValueError as e:
+        print(e)
 
 
 def search_by_email(users_db):
@@ -176,12 +188,18 @@ def add_birthday(users_db):
     birthday = input("Enter the birthday (format DD-MM-YYYY): ")
     try:
         contact = users_db.find_by_name(name)
-        contact.birthday = Birthday(birthday)
-        print("Birthday added successfully.")
-    except KeyError:
-        print("Contact not found.")
-    except ValueError:
-        print("Invalid birthday format. Please use DD-MM-YYYY.")
+        if contact:
+            if Birthday.validate_date(birthday):
+                contact.birthday = Birthday(birthday)
+                print("Birthday added successfully.")
+            else:
+                raise ValueError("Invalid birthday format. Please use DD-MM-YYYY.")
+        else:
+            print("Contact not found.")
+    except ValueError as e:
+        print(e)
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
 def delete_birthday(users_db):
@@ -224,10 +242,12 @@ def search_by_date_birthday(users_db):
 
 
 def show_next_birthday(users_db):
-    days = int(input("Enter the number of days: "))
-    print("Showing next birthdays:")
-    users_db.show_next_birthdays(days)
-
+    days = input("Enter the number of days: ")
+    try:
+        days = int(days)
+        users_db.show_next_birthdays(days)
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
 # NOTES
 
@@ -299,3 +319,42 @@ def delete_note_by_id(db):
         print(
             f"Invalid note ID '{note_id_input}'. Please enter a valid integer ID."
         )
+
+
+def add_address(users_db):
+    name = input("Enter the name of the contact: ")
+    address = input("Enter the address: ")
+    # Assuming users_db.data is a dictionary where the keys are names and the values are Record instances
+    if name in users_db.data:
+        try:
+            users_db.data[name].add_address(address)
+            print(f"Address added for {name}.")
+        except ValueError as e:
+            print(e)
+    else:
+        print(f"No contact found with the name {name}.")
+
+
+def change_address(users_db):
+    name = input("Enter the name of the contact: ")
+    if name in users_db.data:
+        new_address = input("Enter the new address: ")
+        try:
+            users_db.data[name].edit_address(new_address)
+            print(f"Address changed for {name}.")
+        except AttributeError:
+            print(f"No address found for {name}. Use 'add_address' to add one.")
+    else:
+        print(f"No contact found with the name {name}.")
+              
+
+def delete_address(users_db):
+    name = input("Enter the name of the contact: ")
+    if name in users_db.data:
+        try:
+            users_db.data[name].remove_address()
+            print(f"Address deleted for {name}.")
+        except AttributeError:
+            print(f"No address found for {name}.")
+    else:
+        print(f"No contact found with the name {name}.")

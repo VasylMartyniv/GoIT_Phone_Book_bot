@@ -47,15 +47,15 @@ class AddressBook(UserDict):
                 del self.data[old_record.name]
         else:
             raise ValueError("ERROR: An element does not exist in the AddressBook ")
+    
+    def find_by_name(self, name):
+        for record in self.data.values():
+            if record.name.lower() == name.lower():
+                return record
+        raise KeyError("ERROR: The item with the specified name does not exist in AddressBook")
 
-    # Пошук контакту за іменем
-    def find_by_name(self, name: str):
-        if name in self.data:
-            return self.data[name]
-        else:
-            raise KeyError("ERROR: The item with the specified name does not exist in AddressBook")
 
-    # Пошук контакту за телефоном
+    # Пошук контакту за телефономa
     def find_by_phone(self, phone: str):
         for record in self.data:
             if self.data[record].find_phone(phone):
@@ -75,10 +75,26 @@ class AddressBook(UserDict):
         return "End of the list"
 
     def show_next_birthdays(self, days):
-        today = datetime.now().date()
-        for record in self.data:
+        current_date = datetime.now().date()
+        end_date = current_date + timedelta(days=days)
+        birthdays_in_range = []
+
+        for record in self.data.values():
             if record.birthday:
                 birthday_date = datetime.strptime(record.birthday.value, "%d-%m-%Y").date()
-                if today <= birthday_date <= today + timedelta(days=days):
-                    print(f"Name: {record.name}, Birthday: {record.birthday.value}")
-        return "End of the list"
+                # Calculate the next birthday date for this year
+                next_birthday_date = datetime(current_date.year, birthday_date.month, birthday_date.day).date()
+                if current_date <= next_birthday_date <= end_date:
+                    birthdays_in_range.append((record.name, next_birthday_date))
+                # Check for birthdays in the following year if the range includes January
+                elif end_date.month == 1 and birthday_date.month == 12 and current_date.month == 12:
+                    next_birthday_date = datetime(current_date.year + 1, birthday_date.month, birthday_date.day).date()
+                    if current_date <= next_birthday_date <= end_date:
+                        birthdays_in_range.append((record.name, next_birthday_date))
+
+        # Sort birthdays by date
+        birthdays_in_range.sort(key=lambda x: x[1])
+
+        # Print the next birthdays
+        for name, birthday_date in birthdays_in_range:
+            print(f"{name}: {birthday_date.strftime('%d-%m-%Y')}")
