@@ -5,6 +5,9 @@ commands = {
     "search_contact": "Пошук контакту за тегами",
     "change_contact": "Змінити контакт",
     "delete_contact": "Видалити контакт",
+    "add_address": "Додати адресу до контакту",
+    "change_address": "Змінити адресу",
+    "delete_address": "Видалити адресу",
 
     "add_phone": "Додати телефон до контакту",
     "delete_phone": "Видалити телефон з контакту",
