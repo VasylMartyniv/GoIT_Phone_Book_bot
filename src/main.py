@@ -108,6 +108,15 @@ def main():
             elif command == "show_next_birthday":
                 show_next_birthday(users_db)
 
+            elif command == "add_address":
+                add_address(users_db)
+
+            elif command == "change_address":
+                change_address(users_db)
+
+            elif command == "delete_address":
+                delete_address(users_db)
+
             elif command == "add_note":
                 add_note(notes_db)
 
