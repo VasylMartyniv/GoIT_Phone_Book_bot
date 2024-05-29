@@ -30,9 +30,9 @@ class AddressBook(UserDict):
             self.data[record.name] = record
 
     # Видаляти запис із списку
-    def delete_record(self, record: Record):
-        if record.name in self.data:
-            self.data.pop(record.name)
+    def delete_record(self, name: str):
+        if name in self.data:
+            self.data.pop(name)
         else:
             raise ValueError("ERROR: An element does not exist in the AddressBook ")
 
@@ -47,13 +47,12 @@ class AddressBook(UserDict):
                 del self.data[old_record.name]
         else:
             raise ValueError("ERROR: An element does not exist in the AddressBook ")
-    
+
     def find_by_name(self, name):
         for record in self.data.values():
             if record.name.lower() == name.lower():
                 return record
         raise KeyError("ERROR: The item with the specified name does not exist in AddressBook")
-
 
     # Пошук контакту за телефономa
     def find_by_phone(self, phone: str):
