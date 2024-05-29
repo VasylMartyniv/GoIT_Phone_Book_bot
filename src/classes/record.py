@@ -1,7 +1,6 @@
 from src.classes.address import Address
 from src.classes.email import Email
 from src.classes.phone import Phone
-from src.classes.birthday import Birthday
 
 
 class Record:
@@ -39,14 +38,13 @@ class Record:
             address = ""
 
         # Зібрати день народження
-        if self.birthday:
+        if self.birthday.value:
             birthday = "Birthday:" + self.birthday.value + "\n"
         else:
             birthday = ""
 
         # Зібрати стрічку
         return f"{name}{phones}{emails}{address}{birthday}" + "\n"
-
 
     def add_birthday(users_db):
         name = input("Enter the name of the contact to add birthday: ")
@@ -60,8 +58,6 @@ class Record:
                 print(f"No contact found with the name {name}.")
         except ValueError as e:
             print(e)
-
-
 
     # Tools for working with the field:   phones
     def add_phone(self, phone):
